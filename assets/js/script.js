@@ -1,22 +1,22 @@
 // Wait for DOM to finish loading before running the game
 // Get button elements and add event listeners to them
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     let buttons = document.getElementsByTagName("button");
 
     for (let button of buttons) {
-        button.addEventListener("click", function() {
+        button.addEventListener("click", function () {
             if (this.getAttribute("data-type") === "submit") {
-                alert("You clicked submit!");
+                checkAnswer();
             }
             else {
                 let gameType = this.getAttribute("data-type");
                 runGame(gameType);
             }
-        })
+        });
     }
 
     runGame("addition");
-})
+});
 
 /**
  * The main game loop which is called when the script is first loaded
@@ -35,12 +35,39 @@ function runGame(gameType) {
     }
 }
 
-function checkAnswer () {
+/**
+ * Check the user's answer against the correct answer
+ */
+function checkAnswer() {
+    let userAnswer = parseInt(document.getElementById("answer-box").value);
+    let calculatedAnswer = calculateCorrectAnswer();
+    let isCorrect = userAnswer === calculatedAnswer[0];
 
+    if (isCorrect) {
+        alert("You got it right!");
+    }
+    else {
+        alert(`NEIN! The correct answer was ${calculatedAnswer[0]}`);
+    }
+
+    runGame(calculatedAnswer[1]);
 }
 
+/**
+ * Gets the operands and the operator and returns the correct answer
+ */
 function calculateCorrectAnswer() {
+    let operand1 = parseInt(document.getElementById("operand1").innerText);
+    let operand2 = parseInt(document.getElementById("operand2").innerText);
+    let operator = document.getElementById("operator").innerText;
 
+    if (operator === "+") {
+        return [operand1 + operand2, "addition"];
+    }
+    else {
+        alert(`Unimplemented operator ${operator}`);
+        throw `Unimplemented operator ${operator}. Aborting!`;
+    }
 }
 
 function incrementScore() {
